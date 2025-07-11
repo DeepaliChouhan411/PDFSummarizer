@@ -1,10 +1,9 @@
+import os
+import tempfile
 import streamlit as st
 from pypdf import PdfReader
 from transformers import pipeline
 from reportlab.pdfgen import canvas
-import tempfile
-import os
-from transformers import AutoTokenizer
 
 os.environ['CURL_CA_BUNDLE'] = ''  # Disable SSL certificate verification for Hugging Face requests
 
@@ -45,10 +44,10 @@ if uploaded_file:
                 "summarization",
                 model=model_name
             )
-            # Truncate raw text to 1024 tokens
-            tokenizer = AutoTokenizer.from_pretrained(model_name)
-            tokens = tokenizer(pdf_text, truncation=True, max_length=1024)
-            truncated_text = tokenizer.decode(tokens["input_ids"], skip_special_tokens=True)
+            # Truncate raw text to 800 characters
+            max_chars = 800  # ~1024 tokens for most English text
+            chars = pdf_text.split()
+            truncated_text = " ".join(chars[:max_chars])
             summary = summarizer(truncated_text, max_length=200, min_length=30, do_sample=False)[0]['summary_text']
         st.subheader("Summary")
         st.write(summary)
