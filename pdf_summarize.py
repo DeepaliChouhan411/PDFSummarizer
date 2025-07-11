@@ -44,10 +44,8 @@ if uploaded_file:
                 "summarization",
                 model=model_name
             )
-            # Truncate raw text to 800 characters
-            max_chars = 800  # ~1024 tokens for most English text
-            chars = pdf_text.split()
-            truncated_text = " ".join(chars[:max_chars])
+            # Truncate raw text to 1000 characters
+            truncated_text = pdf_text[:1000]
             summary = summarizer(truncated_text, max_length=200, min_length=30, do_sample=False)[0]['summary_text']
         st.subheader("Summary")
         st.write(summary)
